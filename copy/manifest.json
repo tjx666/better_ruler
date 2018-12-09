@@ -1,0 +1,21 @@
+{
+  "name": "Better Ruler",
+  "short_name": "Ruler",
+  "version": "1.0.0",
+  "manifest_version": 2,
+  "author":"paul",
+  "icons": {
+    "128": "icon.png"
+  },
+  "browser_action": {
+    "default_title": "Better Ruler",
+    "default_icon": "icon.png"
+  },
+  "permissions": [
+    "tabs", "activeTab"
+  ],
+  "background":{
+    "scripts":["background.js"],
+    "persistent": false
+  }
+}
