@@ -136,8 +136,8 @@
 				if (e.altKey) this.showShadow = true;
 				else this.showShadow = false;
 
-				let x = e.touches ? e.touches[0].clientX : e.clientX;
-				let y = e.touches ? e.touches[0].clientY : e.clientY;
+				let x = e.touches ? e.touches[0].pageX : e.pageX;
+				let y = e.touches ? e.touches[0].pageY : e.pageY;
 
 				if (this.cursorFollowMouse) this.moveCursor(x, y);
 
@@ -145,16 +145,13 @@
 					if (this.cursorFollowMouse)
 						this.draw(x, y);
 					else
-						this.draw(this.left, this.top);
+						this.draw(this.left + document.body.scrollLeft + document.documentElement.scrollLeft, this.top + document.body.scrollTop + document.documentElement.scrollTop);
 				}
 			}, 32),
 
 			draw(ex, ey) {
 				const item = this.items[this.items.length - 1];
 				if (item) {
-					ex += document.body.scrollLeft + document.documentElement.scrollLeft;
-					ey += document.body.scrollTop + document.documentElement.scrollTop;
-
 					let w = ex - item._x;
 					let h = ey - item._y;
 
@@ -178,10 +175,10 @@
 
 			actionStart(e) {
 				if (this.showShadow && !this.cursorFollowMouse) {
-					this.addItem(this.left, this.top);
+					this.addItem(this.left + document.body.scrollLeft + document.documentElement.scrollLeft, this.top + document.body.scrollTop + document.documentElement.scrollTop);
 				} else {
-					let x = e.touches ? e.touches[0].clientX : e.clientX;
-					let y = e.touches ? e.touches[0].clientY : e.clientY;
+					let x = e.touches ? e.touches[0].pageX : e.pageX;
+					let y = e.touches ? e.touches[0].pageY : e.pageY;
 					this.addItem(x, y);
 				}
 
@@ -189,9 +186,6 @@
 			},
 
 			addItem(x, y) {
-				x += document.body.scrollLeft + document.documentElement.scrollLeft;
-				y += document.body.scrollTop + document.documentElement.scrollTop;
-
 				this.items.push({
 					w: 0,
 					h: 0,
@@ -217,6 +211,9 @@
 			},
 
 			moveCursor(x, y) {
+				x -= document.body.scrollLeft + document.documentElement.scrollLeft;
+				y -= document.body.scrollTop + document.documentElement.scrollTop;
+
 				this.left = x;
 				this.top = y;
 			},
@@ -260,8 +257,6 @@
 					}
 				}
 
-				x -= document.body.scrollLeft + document.documentElement.scrollLeft;
-				y -= document.body.scrollTop + document.documentElement.scrollTop;
 				this.moveCursor(x, y);
 			},
 
@@ -312,3 +307,4 @@
 		}
 	}
 </script>
+
