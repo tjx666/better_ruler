@@ -1,20 +1,26 @@
-<style scoped lang="less">
-    .vi_ruler{
-		position: fixed;
-		left: 0;
-		right: 0;
-		top: 0;
-		bottom: 0;
-		background: rgba(0,0,0,.1);
-        z-index: 99991;
+<style lang="less">
+	.vi_ruler_cursor{
 		cursor: crosshair;
 		user-select: none;
-
+		&::after{
+			content: '';
+			position: fixed;
+			left: 0;
+			right: 0;
+			top: 0;
+			bottom: 0;
+			background-color: rgba(0,0,0,.1);
+			z-index: 99990;
+			pointer-events: none;
+		}
+	}
+	.vi_ruler{
 		.vi_rulerItem{
 			position: absolute;
 			background-color: rgba(50, 122, 228, 0.3);
+			z-index: 99995;
 
-			.txt{
+			.vi_txt{
 				white-space: nowrap;
 				position: absolute;
 				left: 50%;
@@ -27,7 +33,7 @@
 				line-height: 1;
 			}
 
-			.close{
+			.vi_close{
 				line-height: 1;
 				position: absolute;
 				right: 2px;
@@ -40,75 +46,115 @@
 		}
 
 		.vi_rulerCrossX{
-			position: absolute;
+			position: fixed;
 			top: 0;
 			left: 0;
 			right: 0;
 			height: 1px;
-			background-color: black;
+			background-color: red;
 			pointer-events: none;
+			z-index: 99996;
 		}
 		.vi_rulerCrossY{
-			position: absolute;
+			position: fixed;
 			left: 0;
 			top: 0;
 			bottom: 0;
 			width: 1px;
-			background-color: black;
+			background-color: red;
 			pointer-events: none;
+			z-index: 99996;
 		}
-    }
+	}
 </style>
 
 <template>
-    <div class="vi_ruler"
-		 @dblclick.stop="moveCrosshair = !moveCrosshair"
-		 @touchstart="addItem"
-		 @mousedown="addItem"
-		 @touchmove.prevent="moveHandler"
-		 @mousemove="moveHandler"
-		 @touchend="drawDone"
-		 @mouseup="drawDone">
+	<div class="vi_ruler"
+		 @touchstart="actionStart"
+		 @mousedown="actionStart"
+		 @touchmove.prevent="doAction"
+		 @mousemove="doAction"
+		 @touchend="actionEnd"
+		 @mouseup="actionEnd">
 
 		<div class="vi_rulerItem"
 			 @click.stop
 			 v-for="(item, index) in items"
 			 :style="{width: item.w + 'px', height: item.h + 'px', left: item.x + 'px', top: item.y + 'px'}">
-			<span class="close" @touchstart.stop="remove(index)" @mousedown.stop="remove(index)">X</span>
-			<span class="txt">{{ item.w | toInt }}px {{ item.h | toInt }}px</span>
+			<span class="vi_close" @touchstart.stop="remove(index)" @mousedown.stop="remove(index)">X</span>
+			<span class="vi_txt">{{ item.w | toFixed }}px {{ item.h | toFixed }}px</span>
 		</div>
 
-		<span class="vi_rulerCrossX" :style="{transform: 'translateY(' + (top - 0.5) + 'px) scale(1, .2)'}"></span>
-		<span class="vi_rulerCrossY" :style="{transform: 'translateX(' + (left - 0.5) + 'px) scale(.2, 1)'}"></span>
-    </div>
+		<span class="vi_rulerCrossX" :style="{transform: 'translateY(' + (top - 0.5) + 'px) scale(1, .3)'}"></span>
+		<span class="vi_rulerCrossY" :style="{transform: 'translateX(' + (left - 0.5) + 'px) scale(.3, 1)'}"></span>
+	</div>
 </template>
 
 <script>
 	import { throttle } from "../utils/index";
+	import getShadowVm from "./shadow";
 
 	export default {
-        name: "Ruler",
-        data() {
-        	return {
-        		items: [],
+		name: "Ruler",
+
+		data() {
+			return {
+				items: [],
 				startDraw: false,
 				left:0,
 				top:0,
-				moveCrosshair: true
-            }
-        },
-		methods: {
-        	moveHandler: throttle(function (e){
-        		this.showCrosshair(e);
-				this.draw(e);
-			}, 50),
-			draw(e) {
-				if (!this.startDraw) return;
+				showShadow: false,
+				cursorFollowMouse: true,
+				shadowItem: null
+			}
+		},
 
+		props: {
+			snapToAngle: {
+				type: Number,
+				default(){
+					return 15
+				}
+			},
+			snapToLine: {
+				type: Number,
+				default(){
+					return 100
+				}
+			}
+		},
+
+		watch: {
+			showShadow(val, oldValue) {
+				if (val === oldValue) return;
+				val ? this.addShadow() : this.removeShadow();
+			}
+		},
+
+		methods: {
+			doAction: throttle(function (e){
+				if (e.altKey) this.showShadow = true;
+				else this.showShadow = false;
+
+				let x = e.touches ? e.touches[0].clientX : e.clientX;
+				let y = e.touches ? e.touches[0].clientY : e.clientY;
+
+				if (this.cursorFollowMouse) this.moveCursor(x, y);
+
+				if (this.startDraw) {
+					if (this.cursorFollowMouse)
+						this.draw(x, y);
+					else
+						this.draw(this.left, this.top);
+				}
+			}, 32),
+
+			draw(ex, ey) {
 				const item = this.items[this.items.length - 1];
 				if (item) {
-					let ex = e.touches ? e.touches[0].clientX : e.clientX;
-					let ey = e.touches ? e.touches[0].clientY : e.clientY;
+					ex += document.body.scrollLeft + document.documentElement.scrollLeft;
+					ey += document.body.scrollTop + document.documentElement.scrollTop;
+
 					let w = ex - item._x;
 					let h = ey - item._y;
 
@@ -129,49 +175,140 @@
 					}
 				}
 			},
-			addItem(e) {
-				let ex = e.touches ? e.touches[0].clientX : e.clientX;
-				let ey = e.touches ? e.touches[0].clientY : e.clientY;
+
+			actionStart(e) {
+				if (this.showShadow && !this.cursorFollowMouse) {
+					this.addItem(this.left, this.top);
+				} else {
+					let x = e.touches ? e.touches[0].clientX : e.clientX;
+					let y = e.touches ? e.touches[0].clientY : e.clientY;
+					this.addItem(x, y);
+				}
+
+				this.startDraw = true;
+			},
+
+			addItem(x, y) {
+				x += document.body.scrollLeft + document.documentElement.scrollLeft;
+				y += document.body.scrollTop + document.documentElement.scrollTop;
+
 				this.items.push({
 					w: 0,
 					h: 0,
-					_x: ex,
-					_y: ey,
-					x: ex,
-					y: ey
+					_x: x,
+					_y: y,
+					x: x,
+					y: y
 				});
-				this.startDraw = true;
 			},
+
+			actionEnd() {
+				this.drawDone();
+			},
+
 			drawDone() {
-        		this.startDraw = false;
+				this.startDraw = false;
 				const item = this.items[this.items.length - 1];
 				if (item && item.w === 0 && item.h === 0) this.items.pop();
 			},
+
 			remove(index) {
-        		this.items.splice(index, 1);
+				this.items.splice(index, 1);
 			},
-			showCrosshair(e) {
-        		if (!this.moveCrosshair) return;
-        		if (e.touches) {
-					this.left = e.touches[0].clientX;
-					this.top = e.touches[0].clientY;
+
+			moveCursor(x, y) {
+				this.left = x;
+				this.top = y;
+			},
+
+			handleShadowCrosshair({left, top, width, height, pageX, pageY}) {
+				if (!this.showShadow) return;
+
+				let xPos = pageX - left < Math.abs(pageX - left - width) ?
+					['left', pageX - left] :
+					['right', Math.abs(pageX - left - width)],
+
+					yPos = pageY - top < Math.abs(pageY - top - height) ?
+						['top', pageY - top] :
+						['bottom', Math.abs(pageY - top - height)];
+
+				if (xPos[1] > this.snapToLine && yPos[1] > this.snapToLine) {
+					this.cursorFollowMouse = true;
+					return;
+				}
+
+				this.cursorFollowMouse = false;
+
+				let x, y;
+				if (xPos[1] < yPos[1]) {
+					// 水平位置
+					x= xPos[0] === 'left' ? left : left + width;
+					y= pageY;
+
+					if (yPos[1] < this.snapToAngle) {
+						if (pageY - top < this.snapToAngle) y = top;
+						else y = top + height;
+					}
 				} else {
-					this.left = e.clientX;
-					this.top = e.clientY;
+					// 垂直位置
+					x= pageX;
+					y= yPos[0] === 'top' ? top : top + height;
+
+					if (xPos[1] < this.snapToAngle) {
+						if (pageX - left < this.snapToAngle) x = left;
+						else x = left + width;
+					}
+				}
+
+				x -= document.body.scrollLeft + document.documentElement.scrollLeft;
+				y -= document.body.scrollTop + document.documentElement.scrollTop;
+				this.moveCursor(x, y);
+			},
+
+			addShadow() {
+				if (!this._shadow) {
+					this._shadow = getShadowVm([function (el){
+						return el.className.indexOf('vi_') !== 0
+					}]);
+					this._shadow.$on('positionShadow', this.handleShadowCrosshair);
+				}
+			},
+
+			removeShadow() {
+				if (this._shadow) {
+					this.cursorFollowMouse = true;
+					this._shadow.$destroy();
+					this._shadow.$el.remove();
+					delete this._shadow;
 				}
 			}
 		},
+		created(){
+			document.body.addEventListener('touchstart', this.actionStart)
+			document.body.addEventListener('touchmove', this.doAction)
+			document.body.addEventListener('touchend', this.actionEnd)
+
+			document.body.addEventListener('mousedown', this.actionStart)
+			document.body.addEventListener('mousemove', this.doAction)
+			document.body.addEventListener('mouseup', this.actionEnd)
+
+			document.body.classList.add('vi_ruler_cursor');
+		},
+		beforeDestroy() {
+			document.body.removeEventListener('touchstart', this.actionStart)
+			document.body.removeEventListener('touchmove', this.doAction)
+			document.body.removeEventListener('touchend', this.actionEnd)
+
+			document.body.removeEventListener('mousedown', this.actionStart)
+			document.body.removeEventListener('mousemove', this.doAction)
+			document.body.removeEventListener('mouseup', this.actionEnd)
+
+			document.body.classList.remove('vi_ruler_cursor');
+		},
 		filters: {
-        	toInt(n) {
-        		return parseInt(n)
+			toFixed(n) {
+				return +n.toFixed(2);
 			}
 		}
-    }
+	}
 </script>
-
-
-
-
-
-
-
