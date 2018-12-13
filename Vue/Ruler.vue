@@ -69,14 +69,7 @@
 </style>
 
 <template>
-	<div class="vi_ruler"
-		 @touchstart="actionStart"
-		 @mousedown="actionStart"
-		 @touchmove.prevent="doAction"
-		 @mousemove="doAction"
-		 @touchend="actionEnd"
-		 @mouseup="actionEnd">
-
+	<div class="vi_ruler">
 		<div class="vi_rulerItem"
 			 @click.stop
 			 v-for="(item, index) in items"
