@@ -4,11 +4,11 @@ import { getNoConflics } from "./utils";
 // import Tip from "./Vue/Tip.plugin";
 // Vue.use(Tip);
 
-let vm = document.documentElement[getNoConflics()];
+let vm = window[getNoConflics()];
 
 if (vm) {
 	vm.$destroy();
-	delete document.documentElement[getNoConflics()];
+	delete window[getNoConflics()];
 	vm.$el.remove();
 } else {
 	vm = new Vue({
@@ -16,6 +16,6 @@ if (vm) {
 		render: h => h(Ruler)
 	});
 	document.body.appendChild(vm.$el);
-	document.documentElement[getNoConflics()] = vm;
+	window[getNoConflics()] = vm;
 }
 
