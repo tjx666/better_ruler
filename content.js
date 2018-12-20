@@ -1,8 +1,6 @@
 import Vue from 'vue';
 import Ruler from './Vue/Ruler';
 import { getNoConflics } from "./utils";
-// import Tip from "./Vue/Tip.plugin";
-// Vue.use(Tip);
 
 let vm = window[getNoConflics()];
 

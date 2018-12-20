@@ -35,7 +35,7 @@ let config = {
     plugins: [
         new webpack.HashedModuleIdsPlugin(),
         new VueLoaderPlugin(),
-        new CopyWebpackPlugin(['./copy']),
+        new CopyWebpackPlugin(['./copy'])
     ],
 
     module: {
@@ -79,17 +79,10 @@ let config = {
 
 if (isProd) {
     config.mode = 'production';
-    config.plugins.push(new ZipPlugin({ path: '../', filename: 'BetterRuler.zip' }));
-    config.optimization = {
-        minimizer:[
-            new UglifyJsPlugin({
-                cache: true,
-                parallel: true,
-                sourceMap: false
-            }),
-            new OptimizeCSSAssetsPlugin()
-        ]
-    }
+    config.plugins.push(
+        new ZipPlugin({ path: '../', filename: 'BetterRuler.zip' }),
+		new OptimizeCSSAssetsPlugin()
+    );
 } else {
     config.mode = 'development';
     config.devtool = 'cheap-eval-source-map';
