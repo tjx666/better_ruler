@@ -1,4 +1,6 @@
 <style lang="less">
+	@bgGray : #333;
+
 	.vi_ruler_cursor{
 		cursor: crosshair;
 		user-select: none;
@@ -17,7 +19,7 @@
 	.vi_ruler{
 		.vi_rulerItem{
 			position: absolute;
-			background-color: rgba(50, 122, 228, 0.3);
+			/*background-color: rgba(50, 122, 228, 0.3);*/
 			z-index: 99995;
 
 			.vi_txt{
@@ -51,7 +53,7 @@
 			left: 0;
 			right: 0;
 			height: 1px;
-			background-color: red;
+			/*background-color: red;*/
 			pointer-events: none;
 			z-index: 99996;
 		}
@@ -61,9 +63,67 @@
 			top: 0;
 			bottom: 0;
 			width: 1px;
-			background-color: red;
+			/*background-color: red;*/
 			pointer-events: none;
 			z-index: 99996;
+		}
+
+		.vi_toolbar{
+			position: fixed;
+			left: 0;
+			right: 0;
+			bottom: 0;
+			background-color: @bgGray;
+			/*height: 50px;*/
+			z-index: 99999;
+			color: white;
+			padding: 10px;
+
+			.vi_tit{
+				/*flex-basis: ;*/
+				font-weight: bold;
+			}
+
+			.vi_color{
+				vertical-align: middle;
+				border: none;
+				appearance: textfield !important;
+				outline: none;
+				width: 50px;
+				height: 30px;
+				margin: 0;
+				padding: 0;
+				/*background-color: red;*/
+			}
+
+			.vi_text{
+				width: 52px;
+				height: 20px;
+				padding: 0 2px;
+
+				color: #fff!important;
+				background: #474747!important;
+				border: 1px solid #2c2b2b!important;
+			}
+
+			.vi_tbItem{
+				display: inline-block;
+				white-space: nowrap;
+				padding: 0 5px;
+				vertical-align: middle;
+
+				*{
+					vertical-align: middle;
+				}
+			}
+
+			::-webkit-color-swatch-wrapper {
+				border: 1px solid @bgGray;
+				background-color: @bgGray;
+			}
+			::-webkit-color-swatch {
+				/*position: relative;*/
+			}
 		}
 	}
 </style>
@@ -73,18 +133,36 @@
 		<div class="vi_rulerItem"
 			 @click.stop
 			 v-for="(item, index) in items"
-			 :style="{width: item.w + 'px', height: item.h + 'px', left: item.x + 'px', top: item.y + 'px'}">
+			 :style="{width: item.w + 'px', height: item.h + 'px', left: item.x + 'px', top: item.y + 'px', backgroundColor: bgc}">
 			<span class="vi_close" @touchstart.stop="remove(index)" @mousedown.stop="remove(index)">X</span>
 			<span class="vi_txt">{{ item.w | toFixed }}px {{ item.h | toFixed }}px</span>
 		</div>
 
-		<span class="vi_rulerCrossX" :style="{transform: 'translateY(' + (top - 0.5) + 'px) scale(1, .3)'}"></span>
-		<span class="vi_rulerCrossY" :style="{transform: 'translateX(' + (left - 0.5) + 'px) scale(.3, 1)'}"></span>
+		<span class="vi_rulerCrossX" :style="{transform: 'translateY(' + (top - 0.5) + 'px) scale(1, .3)', backgroundColor: bglColor}"></span>
+		<span class="vi_rulerCrossY" :style="{transform: 'translateX(' + (left - 0.5) + 'px) scale(.3, 1)', backgroundColor: bglColor}"></span>
+
+		<div class="vi_toolbar">
+			<div class="vi_tbItem">
+				<span class="vi_tit">背景：</span> <input type="color" class="vi_color" v-model="bgColor" />
+			</div>
+			<div class="vi_tbItem">
+				<span class="vi_tit">辅助线：</span> <input type="color" class="vi_color" v-model="bglColor" />
+			</div>
+			<div class="vi_tbItem">
+				<span>吸附阙值：</span>
+				<div class="vi_tbItem">
+					<span class="vi_tit">边界</span> <input type="number" min="10" max="200" class="vi_text" v-model.number="snapToLine" />
+				</div>
+				<div class="vi_tbItem">
+					<span class="vi_tit">顶点</span> <input type="number" min="5" max="50" class="vi_text" v-model.number="snapToAngle" />
+				</div>
+			</div>
+		</div>
 	</div>
 </template>
 
 <script>
-	import { throttle } from "../utils/index";
+	import { throttle, hex2rgba } from "../utils";
 	import getShadowVm from "./shadow";
 
 	export default {
@@ -98,22 +176,21 @@
 				top:0,
 				showShadow: false,
 				cursorFollowMouse: true,
-				shadowItem: null
+				shadowItem: null,
+				bgColor: '#1171cd',
+				bglColor: '#1171cd',
+				opacity: .3,
+				snapToAngle: 15,
+				snapToLine: 100
 			}
 		},
 
-		props: {
-			snapToAngle: {
-				type: Number,
-				default(){
-					return 15
-				}
+		computed: {
+			bgc() {
+				return hex2rgba(this.bgColor, this.opacity);
 			},
-			snapToLine: {
-				type: Number,
-				default(){
-					return 100
-				}
+			bglc() {
+				return hex2rgba(this.bglColor, 1);
 			}
 		},
 
