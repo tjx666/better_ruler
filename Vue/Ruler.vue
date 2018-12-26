@@ -13,10 +13,16 @@
 			bottom: 0;
 			background-color: rgba(0,0,0,.1);
 			z-index: 99990;
+			/*pointer-events: none;*/
+		}
+		&.vi_shadow_added::after{
 			pointer-events: none;
 		}
 	}
 	.vi_ruler{
+		font-size: 12px;
+		line-height: 1;
+
 		.vi_rulerItem{
 			position: absolute;
 			/*background-color: rgba(50, 122, 228, 0.3);*/
@@ -67,64 +73,6 @@
 			pointer-events: none;
 			z-index: 99996;
 		}
-
-		.vi_toolbar{
-			position: fixed;
-			left: 0;
-			right: 0;
-			bottom: 0;
-			background-color: @bgGray;
-			/*height: 50px;*/
-			z-index: 99999;
-			color: white;
-			padding: 10px;
-
-			.vi_tit{
-				/*flex-basis: ;*/
-				font-weight: bold;
-			}
-
-			.vi_color{
-				vertical-align: middle;
-				border: none;
-				appearance: textfield !important;
-				outline: none;
-				width: 50px;
-				height: 30px;
-				margin: 0;
-				padding: 0;
-				/*background-color: red;*/
-			}
-
-			.vi_text{
-				width: 52px;
-				height: 20px;
-				padding: 0 2px;
-
-				color: #fff!important;
-				background: #474747!important;
-				border: 1px solid #2c2b2b!important;
-			}
-
-			.vi_tbItem{
-				display: inline-block;
-				white-space: nowrap;
-				padding: 0 5px;
-				vertical-align: middle;
-
-				*{
-					vertical-align: middle;
-				}
-			}
-
-			::-webkit-color-swatch-wrapper {
-				border: 1px solid @bgGray;
-				background-color: @bgGray;
-			}
-			::-webkit-color-swatch {
-				/*position: relative;*/
-			}
-		}
 	}
 </style>
 
@@ -133,41 +81,28 @@
 		<div class="vi_rulerItem"
 			 @click.stop
 			 v-for="(item, index) in items"
+			 v-show="item.w > 0 && item.h > 0"
 			 :style="{width: item.w + 'px', height: item.h + 'px', left: item.x + 'px', top: item.y + 'px', backgroundColor: bgc}">
-			<span class="vi_close" @touchstart.stop="remove(index)" @mousedown.stop="remove(index)">X</span>
+			<span class="vi_close" :style="{backgroundColor: bgColor}" @touchstart.stop="remove(index)" @mousedown.stop="remove(index)">X</span>
 			<span class="vi_txt">{{ item.w | toFixed }}px {{ item.h | toFixed }}px</span>
 		</div>
 
-		<span class="vi_rulerCrossX" :style="{transform: 'translateY(' + (top - 0.5) + 'px) scale(1, .3)', backgroundColor: bglColor}"></span>
-		<span class="vi_rulerCrossY" :style="{transform: 'translateX(' + (left - 0.5) + 'px) scale(.3, 1)', backgroundColor: bglColor}"></span>
+		<span class="vi_rulerCrossX" :style="{transform: 'translateY(' + (top - 0.3) + 'px) scale(1, .3)', backgroundColor: bgColor}"></span>
+		<span class="vi_rulerCrossY" :style="{transform: 'translateX(' + (left - 0.3) + 'px) scale(.3, 1)', backgroundColor: bgColor}"></span>
 
-		<div class="vi_toolbar">
-			<div class="vi_tbItem">
-				<span class="vi_tit">背景：</span> <input type="color" class="vi_color" v-model="bgColor" />
-			</div>
-			<div class="vi_tbItem">
-				<span class="vi_tit">辅助线：</span> <input type="color" class="vi_color" v-model="bglColor" />
-			</div>
-			<div class="vi_tbItem">
-				<span>吸附阙值：</span>
-				<div class="vi_tbItem">
-					<span class="vi_tit">边界</span> <input type="number" min="10" max="200" class="vi_text" v-model.number="snapToLine" />
-				</div>
-				<div class="vi_tbItem">
-					<span class="vi_tit">顶点</span> <input type="number" min="5" max="50" class="vi_text" v-model.number="snapToAngle" />
-				</div>
-			</div>
-		</div>
+		<!--<Toolbar :snapToLine.sync="snapToLine" :snapToAngle.sync="snapToAngle" />-->
+		<Toolbar />
 	</div>
 </template>
 
 <script>
 	import { throttle, hex2rgba } from "../utils";
 	import getShadowVm from "./shadow";
+	import Toolbar from "./Toolbar";
 
 	export default {
 		name: "Ruler",
-
+		components: {Toolbar},
 		data() {
 			return {
 				items: [],
@@ -178,19 +113,14 @@
 				cursorFollowMouse: true,
 				shadowItem: null,
 				bgColor: '#1171cd',
-				bglColor: '#1171cd',
-				opacity: .3,
 				snapToAngle: 15,
-				snapToLine: 100
+				snapToLine: 50
 			}
 		},
 
 		computed: {
 			bgc() {
-				return hex2rgba(this.bgColor, this.opacity);
-			},
-			bglc() {
-				return hex2rgba(this.bglColor, 1);
+				return hex2rgba(this.bgColor, .3);
 			}
 		},
 
@@ -336,6 +266,8 @@
 						return el.className.indexOf('vi_') !== 0
 					}]);
 					this._shadow.$on('positionShadow', this.handleShadowCrosshair);
+
+					document.body.classList.add('vi_shadow_added');
 				}
 			},
 
@@ -345,6 +277,8 @@
 					this._shadow.$destroy();
 					this._shadow.$el.remove();
 					delete this._shadow;
+
+					document.body.classList.remove('vi_shadow_added');
 				}
 			}
 		},

@@ -3,7 +3,7 @@ const path                  = require('path');
 // const MiniCssExtractPlugin  = require('mini-css-extract-plugin');
 const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
 const VueLoaderPlugin       = require('vue-loader/lib/plugin');
-const UglifyJsPlugin        = require("uglifyjs-webpack-plugin");
+// const UglifyJsPlugin        = require("uglifyjs-webpack-plugin");
 const ZipPlugin             = require('zip-webpack-plugin');
 const CopyWebpackPlugin     = require('copy-webpack-plugin');
 const isProd                = process.env.NODE_ENV === 'production';
