@@ -13,7 +13,7 @@ if (vm) {
 		el: document.createElement('div'),
 		render: h => h(Ruler)
 	});
-	document.body.appendChild(vm.$el);
+	document.documentElement.appendChild(vm.$el);
 	window[getNoConflics()] = vm;
 }
 

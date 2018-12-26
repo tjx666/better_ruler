@@ -283,24 +283,24 @@
 			}
 		},
 		created(){
-			document.body.addEventListener('touchstart', this.actionStart)
-			document.body.addEventListener('touchmove', this.doAction)
-			document.body.addEventListener('touchend', this.actionEnd)
+			document.addEventListener('touchstart', this.actionStart)
+			document.addEventListener('touchmove', this.doAction)
+			document.addEventListener('touchend', this.actionEnd)
 
-			document.body.addEventListener('mousedown', this.actionStart)
-			document.body.addEventListener('mousemove', this.doAction)
-			document.body.addEventListener('mouseup', this.actionEnd)
+			document.addEventListener('mousedown', this.actionStart)
+			document.addEventListener('mousemove', this.doAction)
+			document.addEventListener('mouseup', this.actionEnd)
 
 			document.body.classList.add('vi_ruler_cursor');
 		},
 		beforeDestroy() {
-			document.body.removeEventListener('touchstart', this.actionStart)
-			document.body.removeEventListener('touchmove', this.doAction)
-			document.body.removeEventListener('touchend', this.actionEnd)
+			document.removeEventListener('touchstart', this.actionStart)
+			document.removeEventListener('touchmove', this.doAction)
+			document.removeEventListener('touchend', this.actionEnd)
 
-			document.body.removeEventListener('mousedown', this.actionStart)
-			document.body.removeEventListener('mousemove', this.doAction)
-			document.body.removeEventListener('mouseup', this.actionEnd)
+			document.removeEventListener('mousedown', this.actionStart)
+			document.removeEventListener('mousemove', this.doAction)
+			document.removeEventListener('mouseup', this.actionEnd)
 
 			document.body.classList.remove('vi_ruler_cursor');
 		},

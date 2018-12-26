@@ -136,7 +136,6 @@
 					el.addEventListener('change', el._validate);
 				},
 				unbind(el) {
-					console.log('unbind', el);
 					el.removeEventListener('change', el._validate);
 					delete el._validate;
 				}
