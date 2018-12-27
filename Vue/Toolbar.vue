@@ -8,8 +8,22 @@
 		background-color: @bgGray;
 		z-index: 99999;
 		color: white;
-		padding: 10px;
+		padding: 5px 10px;
 		cursor: auto;
+		/*color: #666666;*/
+		/*background: linear-gradient(to bottom, rgba(255,255,255,1) 0%, rgba(246,246,246,1) 47%, rgba(237,237,237,1) 100%);*/
+
+		.vi_close{
+			position: absolute;
+			right: 10px;
+			font-size: 14px;
+			top: 0;
+			bottom: 0;
+			line-height: 38px;
+			width: 20px;
+			text-align: center;
+			cursor: pointer;
+		}
 
 		.vi_tit {
 			font-weight: bold;
@@ -21,29 +35,51 @@
 			appearance: textfield !important;
 			outline: none;
 			width: 50px;
-			height: 30px;
+			height: 28px;
 			margin: 0;
 			padding: 0;
 		}
 
 		.vi_text {
 			width: 52px;
-			height: 20px;
+			height: 18px;
 			padding: 0 2px;
+			padding-right: 15px;
+			text-align: right;
 
 			color: #fff !important;
 			background: #474747 !important;
 			border: 1px solid #666 !important;
+			appearance: textfield !important;
+
+			&::-webkit-outer-spin-button,
+			&::-webkit-inner-spin-button {
+				/*-webkit-appearance: none !important;*/
+				/*margin-left: 10px;*/
+				transform: translateX(15px);
+			}
 		}
 
 		.vi_tbItem {
 			display: inline-block;
 			white-space: nowrap;
 			padding: 0 5px;
-			vertical-align: middle;
 
 			* {
 				vertical-align: middle;
+			}
+		}
+		.vi_snap .vi_tbItem{
+			position: relative;
+
+			&::after{
+				content: 'px';
+				color: gray;
+				position: absolute;
+				right: 18px;
+				top: 0;
+				bottom: 0;
+				line-height: 20px;
 			}
 		}
 
@@ -63,19 +99,20 @@
 			<span class="vi_tit">颜色：</span>
 			<input type="color" class="vi_color" v-model="$parent.bgColor"/>
 		</div>
-		<div class="vi_tbItem">
-			<span>吸附范围：</span>
+		<div class="vi_tbItem vi_snap">
+			<!--<span>吸附设置 </span>-->
 
 			<div class="vi_tbItem">
-				<span class="vi_tit">边界：</span>
-				<input type="number" min="10" max="200" class="vi_text" v-validate v-model="$parent.snapToLine"/>
+				<span class="vi_tit">边界吸附：</span>
+				<input type="number" min="0" max="200" class="vi_text" v-validate v-model="$parent.snapToLine"/>
 			</div>
 
 			<div class="vi_tbItem">
-				<span class="vi_tit">顶点：</span>
-				<input type="number" min="5" max="50" class="vi_text" v-validate v-model="$parent.snapToAngle"/>
+				<span class="vi_tit">顶点吸附：</span>
+				<input type="number" min="0" max="100" class="vi_text" v-validate v-model="$parent.snapToAngle"/>
 			</div>
 		</div>
+		<span class="vi_close" @click="$parent.showToolbar = false">X</span>
 	</div>
 </template>
 
@@ -120,10 +157,12 @@
 			validate: {
 				bind(el) {
 					el._validate = function (){
-						if (+el.value > +el.max || +el.value < +el.min) {
-							if (+el.value > +el.max) {
+						el.value = +el.value || 0;
+
+						if (el.value > +el.max || el.value < +el.min) {
+							if (el.value > +el.max) {
 								el.value = el.max
-							} else if (+el.value < +el.min) {
+							} else if (el.value < +el.min) {
 								el.value = el.min
 							}
 

@@ -1,6 +1,6 @@
 {
   "name": "better_ruler",
-  "version": "1.1.2",
+  "version": "1.1.5",
   "description": "A better ruler with more convenience to measure elements in a web page",
   "main": "content.js",
   "scripts": {

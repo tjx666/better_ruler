@@ -22,6 +22,9 @@
 	.vi_ruler{
 		font-size: 12px;
 		line-height: 1;
+		/*font-family: "Helvetica Neue", Helvetica, Arial, sans-serif !important;*/
+		font-family: -apple-system, BlinkMacSystemFont, "PingFang SC","Helvetica Neue",STHeiti,"Microsoft Yahei",Tahoma,Simsun,sans-serif;
+
 
 		.vi_rulerItem{
 			position: absolute;
@@ -34,7 +37,7 @@
 				left: 50%;
 				top: 50%;
 				transform: translate(-50%, -50%);
-				font-size: 14px;
+				font-size: 12px;
 				background-color: rgba(237,237,237,1);
 				border-radius: 3px;
 				padding: 2px 3px;
@@ -87,11 +90,11 @@
 			<span class="vi_txt">{{ item.w | toFixed }}px {{ item.h | toFixed }}px</span>
 		</div>
 
-		<span class="vi_rulerCrossX" :style="{transform: 'translateY(' + (top - 0.3) + 'px) scale(1, .3)', backgroundColor: bgColor}"></span>
-		<span class="vi_rulerCrossY" :style="{transform: 'translateX(' + (left - 0.3) + 'px) scale(.3, 1)', backgroundColor: bgColor}"></span>
+		<span class="vi_rulerCrossX" :style="{transform: 'translateY(' + (top - offsetLine) + 'px) scale(1, ' + offsetLine + ')', backgroundColor: bgColor}"></span>
+		<span class="vi_rulerCrossY" :style="{transform: 'translateX(' + (left - offsetLine) + 'px) scale(' + offsetLine + ', 1)', backgroundColor: bgColor}"></span>
 
 		<!--<Toolbar :snapToLine.sync="snapToLine" :snapToAngle.sync="snapToAngle" />-->
-		<Toolbar />
+		<Toolbar v-if="showToolbar"/>
 	</div>
 </template>
 
@@ -114,7 +117,9 @@
 				shadowItem: null,
 				bgColor: '#1171cd',
 				snapToAngle: 15,
-				snapToLine: 50
+				snapToLine: 50,
+				offsetLine: /chrome/i.test(navigator.userAgent) ? .3 : .5,
+				showToolbar: true
 			}
 		},
 
@@ -280,6 +285,11 @@
 
 					document.body.classList.remove('vi_shadow_added');
 				}
+			},
+
+			toggleToolbar(e) {
+				if (e.target !== e.currentTarget) return;
+				if (e.key === 'f' || e.which === 70) this.showToolbar = !this.showToolbar;
 			}
 		},
 		created(){
@@ -291,6 +301,8 @@
 			document.addEventListener('mousemove', this.doAction)
 			document.addEventListener('mouseup', this.actionEnd)
 
+			document.body.addEventListener('keyup', this.toggleToolbar);
+
 			document.body.classList.add('vi_ruler_cursor');
 		},
 		beforeDestroy() {
@@ -301,6 +313,8 @@
 			document.removeEventListener('mousedown', this.actionStart)
 			document.removeEventListener('mousemove', this.doAction)
 			document.removeEventListener('mouseup', this.actionEnd)
+
+			document.body.removeEventListener('keyup', this.toggleToolbar);
 
 			document.body.classList.remove('vi_ruler_cursor');
 		},
