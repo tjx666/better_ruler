@@ -41,7 +41,7 @@
 		}
 
 		.vi_text {
-			width: 52px;
+			width: 32px;
 			height: 18px;
 			padding: 0 2px;
 			padding-right: 15px;
@@ -54,9 +54,9 @@
 
 			&::-webkit-outer-spin-button,
 			&::-webkit-inner-spin-button {
-				/*-webkit-appearance: none !important;*/
-				/*margin-left: 10px;*/
-				transform: translateX(15px);
+				/*-webkit-appearance: auto !important;*/
+				/*transform: translateX(15px);*/
+				display: none;
 			}
 		}
 
@@ -76,7 +76,7 @@
 				content: 'px';
 				color: gray;
 				position: absolute;
-				right: 18px;
+				right: 7px;
 				top: 0;
 				bottom: 0;
 				line-height: 20px;
@@ -92,17 +92,17 @@
 		}
 
 		&.vi_toolbar_ff{
-			.vi_snap .vi_tbItem{
-				&::after{
-					content: 'px';
-					color: gray;
-					position: absolute;
-					right: 7px;
-					top: 0;
-					bottom: 0;
-					line-height: 20px;
-				}
-			}
+			/*.vi_snap .vi_tbItem{*/
+				/*&::after{*/
+					/*content: 'px';*/
+					/*color: gray;*/
+					/*position: absolute;*/
+					/*right: 7px;*/
+					/*top: 0;*/
+					/*bottom: 0;*/
+					/*line-height: 20px;*/
+				/*}*/
+			/*}*/
 
 			.vi_color {
 				height: 20px;

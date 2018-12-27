@@ -25,6 +25,10 @@
 		/*font-family: "Helvetica Neue", Helvetica, Arial, sans-serif !important;*/
 		font-family: -apple-system, BlinkMacSystemFont, "PingFang SC","Helvetica Neue",STHeiti,"Microsoft Yahei",Tahoma,Simsun,sans-serif;
 
+		* {
+			box-sizing: content-box;
+		}
+
 
 		.vi_rulerItem{
 			position: absolute;
