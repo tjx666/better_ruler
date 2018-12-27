@@ -90,11 +90,29 @@
 		::-webkit-color-swatch {
 			/*position: relative;*/
 		}
+
+		&.vi_toolbar_ff{
+			.vi_snap .vi_tbItem{
+				&::after{
+					content: 'px';
+					color: gray;
+					position: absolute;
+					right: 7px;
+					top: 0;
+					bottom: 0;
+					line-height: 20px;
+				}
+			}
+
+			.vi_color {
+				height: 20px;
+			}
+		}
 	}
 </style>
 
 <template>
-	<div class="vi_toolbar" @mousemove.stop @touchmove.stop>
+	<div class="vi_toolbar" :class="{vi_toolbar_ff: isFF}" @mousemove.stop @touchmove.stop>
 		<div class="vi_tbItem">
 			<span class="vi_tit">颜色：</span>
 			<input type="color" class="vi_color" v-model="$parent.bgColor"/>
@@ -117,16 +135,19 @@
 </template>
 
 <script>
+	import {isFF} from "../utils";
+
 	export default {
 		name: "Toolbar",
 
-		// data() {
-		// 	return {
-		// 		bgColor: '#1171cd',
-		// 		angleValue: this.snapToAngle,
-		// 		lineValue: this.snapToLine
-		// 	}
-		// },
+		data() {
+			return {
+				isFF
+				// bgColor: '#1171cd',
+				// angleValue: this.snapToAngle,
+				// lineValue: this.snapToLine
+			}
+		},
 
 		// props: {
 		// 	snapToAngle: {

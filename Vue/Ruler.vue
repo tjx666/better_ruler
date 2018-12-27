@@ -99,7 +99,7 @@
 </template>
 
 <script>
-	import { throttle, hex2rgba } from "../utils";
+	import { throttle, hex2rgba, isChrome } from "../utils";
 	import getShadowVm from "./shadow";
 	import Toolbar from "./Toolbar";
 
@@ -118,7 +118,7 @@
 				bgColor: '#1171cd',
 				snapToAngle: 15,
 				snapToLine: 50,
-				offsetLine: /chrome/i.test(navigator.userAgent) ? .3 : .5,
+				offsetLine: isChrome ? .3 : .5,
 				showToolbar: true
 			}
 		},

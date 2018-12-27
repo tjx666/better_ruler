@@ -82,6 +82,9 @@ export function getNoConflics() {
 	return '_a0d8a003d764049569a9681bd4296ff2';
 }
 
+export const isChrome = /chrome/i.test(navigator.userAgent);
+export const isFF = /Firefox/i.test(navigator.userAgent);
+
 export function hex2rgba(hex, opacity) {
 	let reg = /^#([0-9a-fA-f]{3}|[0-9a-fA-f]{6})$/;
 	let sColor = hex.toLowerCase();

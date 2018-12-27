@@ -1,7 +1,12 @@
 ## Better Ruler
 [插件地址](https://chrome.google.com/webstore/detail/better-ruler/ilcnadaaninblgbekoaihdhoiecaflie)
 
-> A better ruler with more convenience to measure elements in a web page
+> A web measurement tool that snaps around web elements for easier measurement.
+
+- Click on the plugin icon to start the measurement. Click again to exit the measurement.
+- Hold down the `Alt` key while moving the mouse to display the size of the element at the current mouse position in real time.
+- Hold down the `Alt` key while moving the mouse, if it is within the adsorption range (within 50px from the element boundary, within 15px from the vertex), it can be automatically adsorbed.
+- Press the `f` key to quickly show and hide the bottom toolbar.
 
 > 一个网页测量工具，它可以吸附到网页元素周围，从而更方便的测量。
 
