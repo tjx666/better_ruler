@@ -92,18 +92,6 @@
 		}
 
 		&.vi_toolbar_ff{
-			/*.vi_snap .vi_tbItem{*/
-				/*&::after{*/
-					/*content: 'px';*/
-					/*color: gray;*/
-					/*position: absolute;*/
-					/*right: 7px;*/
-					/*top: 0;*/
-					/*bottom: 0;*/
-					/*line-height: 20px;*/
-				/*}*/
-			/*}*/
-
 			.vi_color {
 				height: 20px;
 			}

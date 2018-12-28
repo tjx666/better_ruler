@@ -1,7 +1,7 @@
 {
   "name": "Better Ruler",
   "short_name": "Ruler",
-  "version": "1.1.7",
+  "version": "1.1.8",
   "manifest_version": 2,
   "description": "A better ruler with more convenience to measure elements in a web page. 一个网页测量工具，它可以吸附到网页元素周围，从而更方便的测量。",
   "author":"paul",

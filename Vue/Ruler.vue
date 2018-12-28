@@ -90,8 +90,10 @@
 			 v-for="(item, index) in items"
 			 v-show="item.w > 0 && item.h > 0"
 			 :style="{width: item.w + 'px', height: item.h + 'px', left: item.x + 'px', top: item.y + 'px', backgroundColor: bgc}">
-			<span class="vi_close" :style="{backgroundColor: bgColor}" @touchstart.stop="remove(index)" @mousedown.stop="remove(index)">X</span>
-			<span class="vi_txt">{{ item.w | toFixed }}px {{ item.h | toFixed }}px</span>
+			<div v-if="showSize">
+				<span class="vi_close" :style="{backgroundColor: bgColor}" @touchstart.stop="remove(index)" @mousedown.stop="remove(index)">X</span>
+				<span class="vi_txt">{{ item.w | toFixed }}px {{ item.h | toFixed }}px</span>
+			</div>
 		</div>
 
 		<span class="vi_rulerCrossX" :style="{transform: 'translateY(' + (top - offsetLine) + 'px) scale(1, ' + offsetLine + ')', backgroundColor: bgColor}"></span>
@@ -123,7 +125,8 @@
 				snapToAngle: 15,
 				snapToLine: 50,
 				offsetLine: isChrome ? .3 : .5,
-				showToolbar: true
+				showSize:  true,
+				showToolbar: false
 			}
 		},
 
@@ -142,8 +145,7 @@
 
 		methods: {
 			doAction: throttle(function (e){
-				if (e.altKey) this.showShadow = true;
-				else this.showShadow = false;
+				this.showShadow = e.altKey;
 
 				let x = e.touches ? e.touches[0].pageX : e.pageX;
 				let y = e.touches ? e.touches[0].pageY : e.pageY;
@@ -291,34 +293,42 @@
 				}
 			},
 
-			toggleToolbar(e) {
+			toggle(e) {
 				if (e.target !== e.currentTarget) return;
 				if (e.key === 'f' || e.which === 70) this.showToolbar = !this.showToolbar;
+				this.showSize = !(e.key === 'Shift' || e.shiftKey);
+			},
+
+			toggleShowSize(e) {
+				if (e.target !== e.currentTarget) return;
+				this.showSize = true;
 			}
 		},
 		created(){
-			document.addEventListener('touchstart', this.actionStart)
-			document.addEventListener('touchmove', this.doAction)
-			document.addEventListener('touchend', this.actionEnd)
+			document.addEventListener('touchstart', this.actionStart);
+			document.addEventListener('touchmove', this.doAction);
+			document.addEventListener('touchend', this.actionEnd);
 
-			document.addEventListener('mousedown', this.actionStart)
-			document.addEventListener('mousemove', this.doAction)
-			document.addEventListener('mouseup', this.actionEnd)
+			document.addEventListener('mousedown', this.actionStart);
+			document.addEventListener('mousemove', this.doAction);
+			document.addEventListener('mouseup', this.actionEnd);
 
-			document.body.addEventListener('keyup', this.toggleToolbar);
+			document.body.addEventListener('keydown', this.toggle);
+			document.body.addEventListener('keyup', this.toggleShowSize);
 
 			document.body.classList.add('vi_ruler_cursor');
 		},
 		beforeDestroy() {
-			document.removeEventListener('touchstart', this.actionStart)
-			document.removeEventListener('touchmove', this.doAction)
-			document.removeEventListener('touchend', this.actionEnd)
+			document.removeEventListener('touchstart', this.actionStart);
+			document.removeEventListener('touchmove', this.doAction);
+			document.removeEventListener('touchend', this.actionEnd);
 
-			document.removeEventListener('mousedown', this.actionStart)
-			document.removeEventListener('mousemove', this.doAction)
-			document.removeEventListener('mouseup', this.actionEnd)
+			document.removeEventListener('mousedown', this.actionStart);
+			document.removeEventListener('mousemove', this.doAction);
+			document.removeEventListener('mouseup', this.actionEnd);
 
-			document.body.removeEventListener('keyup', this.toggleToolbar);
+			document.body.removeEventListener('keydown', this.toggle);
+			document.body.removeEventListener('keyup', this.toggleShowSize);
 
 			document.body.classList.remove('vi_ruler_cursor');
 		},
