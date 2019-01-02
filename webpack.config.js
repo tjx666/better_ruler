@@ -1,6 +1,6 @@
 const webpack               = require('webpack');
 const path                  = require('path');
-// const MiniCssExtractPlugin  = require('mini-css-extract-plugin');
+const MiniCssExtractPlugin  = require('mini-css-extract-plugin');
 const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
 const VueLoaderPlugin       = require('vue-loader/lib/plugin');
 // const UglifyJsPlugin        = require("uglifyjs-webpack-plugin");
@@ -35,6 +35,9 @@ let config = {
     plugins: [
         new webpack.HashedModuleIdsPlugin(),
         new VueLoaderPlugin(),
+	    new MiniCssExtractPlugin({
+		    filename:'css.css'
+	    }),
         new CopyWebpackPlugin(['./copy'])
     ],
 
@@ -54,8 +57,8 @@ let config = {
         },{
             test: /\.(less|css)$/,
             use: [
-                'vue-style-loader',
-                // MiniCssExtractPlugin.loader,
+                // 'vue-style-loader',
+                MiniCssExtractPlugin.loader,
                 'css-loader',
                 'postcss-loader',
                 'less-loader'
@@ -80,8 +83,8 @@ let config = {
 if (isProd) {
     config.mode = 'production';
     config.plugins.push(
-        new ZipPlugin({ path: '../', filename: 'BetterRuler.zip' }),
-		new OptimizeCSSAssetsPlugin()
+		new OptimizeCSSAssetsPlugin(),
+		new ZipPlugin({ path: '../', filename: 'BetterRuler.zip' })
     );
 } else {
     config.mode = 'development';

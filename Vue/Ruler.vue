@@ -302,6 +302,17 @@
 			toggleShowSize(e) {
 				if (e.target !== e.currentTarget) return;
 				this.showSize = true;
+			},
+
+			insertCss() {
+				this._link = document.createElement('link');
+				this._link.rel = "stylesheet";
+				this._link.href = chrome.extension.getURL('css.css');
+				(document.head||document.documentElement).appendChild(this._link);
+			},
+
+			removeCss() {
+				this._link.remove();
 			}
 		},
 		created(){
@@ -317,6 +328,8 @@
 			document.body.addEventListener('keyup', this.toggleShowSize);
 
 			document.body.classList.add('vi_ruler_cursor');
+
+			this.insertCss();
 		},
 		beforeDestroy() {
 			document.removeEventListener('touchstart', this.actionStart);
@@ -331,6 +344,8 @@
 			document.body.removeEventListener('keyup', this.toggleShowSize);
 
 			document.body.classList.remove('vi_ruler_cursor');
+
+			this.removeCss();
 		},
 		filters: {
 			toFixed(n) {
