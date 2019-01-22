@@ -13,7 +13,6 @@
 			bottom: 0;
 			background-color: rgba(0,0,0,.1);
 			z-index: 99990;
-			/*pointer-events: none;*/
 		}
 		&.vi_shadow_added::after{
 			pointer-events: none;
@@ -22,17 +21,15 @@
 	.vi_ruler{
 		font-size: 12px;
 		line-height: 1;
-		/*font-family: "Helvetica Neue", Helvetica, Arial, sans-serif !important;*/
 		font-family: -apple-system, BlinkMacSystemFont, "PingFang SC","Helvetica Neue",STHeiti,"Microsoft Yahei",Tahoma,Simsun,sans-serif;
 
 		* {
-			box-sizing: content-box;
+			box-sizing: content-box !important;
 		}
 
 
 		.vi_rulerItem{
 			position: absolute;
-			/*background-color: rgba(50, 122, 228, 0.3);*/
 			z-index: 99995;
 
 			.vi_txt{
@@ -122,6 +119,7 @@
 				cursorFollowMouse: true,
 				shadowItem: null,
 				bgColor: '#1171cd',
+				bgOpacity: .3,
 				snapToAngle: 15,
 				snapToLine: 50,
 				offsetLine: isChrome ? .3 : .5,
@@ -132,7 +130,7 @@
 
 		computed: {
 			bgc() {
-				return hex2rgba(this.bgColor, .3);
+				return hex2rgba(this.bgColor, this.bgOpacity);
 			}
 		},
 
@@ -313,38 +311,56 @@
 
 			removeCss() {
 				this._link.remove();
+			},
+
+			getStoredData() {
+				chrome.storage.local.get(['bgColor', 'bgOpacity', 'snapToAngle', 'snapToLine'], ({bgColor, bgOpacity, snapToAngle, snapToLine}) => {
+					if (bgColor) {
+						this.bgColor = bgColor;
+						this.bgOpacity = bgOpacity;
+						this.snapToAngle = snapToAngle;
+						this.snapToLine = snapToLine;
+					}
+				});
+			},
+
+			bindEvs() {
+				document.addEventListener('touchstart', this.actionStart);
+				document.addEventListener('touchmove', this.doAction);
+				document.addEventListener('touchend', this.actionEnd);
+				document.addEventListener('mousedown', this.actionStart);
+				document.addEventListener('mousemove', this.doAction);
+				document.addEventListener('mouseup', this.actionEnd);
+				document.body.addEventListener('keydown', this.toggle);
+				document.body.addEventListener('keyup', this.toggleShowSize);
+			},
+
+			removeEvs() {
+				document.removeEventListener('touchstart', this.actionStart);
+				document.removeEventListener('touchmove', this.doAction);
+				document.removeEventListener('touchend', this.actionEnd);
+
+				document.removeEventListener('mousedown', this.actionStart);
+				document.removeEventListener('mousemove', this.doAction);
+				document.removeEventListener('mouseup', this.actionEnd);
+
+				document.body.removeEventListener('keydown', this.toggle);
+				document.body.removeEventListener('keyup', this.toggleShowSize);
 			}
 		},
 		created(){
-			document.addEventListener('touchstart', this.actionStart);
-			document.addEventListener('touchmove', this.doAction);
-			document.addEventListener('touchend', this.actionEnd);
-
-			document.addEventListener('mousedown', this.actionStart);
-			document.addEventListener('mousemove', this.doAction);
-			document.addEventListener('mouseup', this.actionEnd);
-
-			document.body.addEventListener('keydown', this.toggle);
-			document.body.addEventListener('keyup', this.toggleShowSize);
-
 			document.body.classList.add('vi_ruler_cursor');
 
+			this.bindEvs();
 			this.insertCss();
+			this.getStoredData();
+
+			// this.watchData();
 		},
 		beforeDestroy() {
-			document.removeEventListener('touchstart', this.actionStart);
-			document.removeEventListener('touchmove', this.doAction);
-			document.removeEventListener('touchend', this.actionEnd);
-
-			document.removeEventListener('mousedown', this.actionStart);
-			document.removeEventListener('mousemove', this.doAction);
-			document.removeEventListener('mouseup', this.actionEnd);
-
-			document.body.removeEventListener('keydown', this.toggle);
-			document.body.removeEventListener('keyup', this.toggleShowSize);
-
 			document.body.classList.remove('vi_ruler_cursor');
 
+			this.removeEvs();
 			this.removeCss();
 		},
 		filters: {

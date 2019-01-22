@@ -10,8 +10,6 @@
 		color: white;
 		padding: 5px 10px;
 		cursor: auto;
-		/*color: #666666;*/
-		/*background: linear-gradient(to bottom, rgba(255,255,255,1) 0%, rgba(246,246,246,1) 47%, rgba(237,237,237,1) 100%);*/
 
 		.vi_close{
 			position: absolute;
@@ -54,8 +52,6 @@
 
 			&::-webkit-outer-spin-button,
 			&::-webkit-inner-spin-button {
-				/*-webkit-appearance: auto !important;*/
-				/*transform: translateX(15px);*/
 				display: none;
 			}
 		}
@@ -67,6 +63,19 @@
 
 			* {
 				vertical-align: middle;
+			}
+
+			input[type=range]{
+				width: 80px;
+			}
+
+			button{
+				padding: 2px 5px !important;
+				width: auto !important;
+				height: auto !important;
+				font-size: 12px !important;
+				border-radius: 3px;
+				line-height: 16px;
 			}
 		}
 		.vi_snap .vi_tbItem{
@@ -105,9 +114,13 @@
 			<span class="vi_tit">颜色：</span>
 			<input type="color" class="vi_color" v-model="$parent.bgColor"/>
 		</div>
-		<div class="vi_tbItem vi_snap">
-			<!--<span>吸附设置 </span>-->
 
+		<div class="vi_tbItem">
+			<span class="vi_tit">背景透明度：</span>
+			<input type="range" min=".1" max="1" step=".1" v-model="$parent.bgOpacity" />
+		</div>
+
+		<div class="vi_tbItem vi_snap">
 			<div class="vi_tbItem">
 				<span class="vi_tit">边界吸附：</span>
 				<input type="number" min="0" max="200" class="vi_text" v-validate v-model="$parent.snapToLine"/>
@@ -118,6 +131,11 @@
 				<input type="number" min="0" max="100" class="vi_text" v-validate v-model="$parent.snapToAngle"/>
 			</div>
 		</div>
+
+		<div class="vi_tbItem">
+			<button @click="reset" title="重置所有设置项到默认值">重置</button>
+		</div>
+
 		<span class="vi_close" @click="$parent.showToolbar = false">X</span>
 	</div>
 </template>
@@ -131,36 +149,39 @@
 		data() {
 			return {
 				isFF
-				// bgColor: '#1171cd',
-				// angleValue: this.snapToAngle,
-				// lineValue: this.snapToLine
 			}
 		},
 
-		// props: {
-		// 	snapToAngle: {
-		// 		type: Number,
-		// 		default() {
-		// 			return 15
-		// 		}
-		// 	},
-		//
-		// 	snapToLine: {
-		// 		type: Number,
-		// 		default() {
-		// 			return 50
-		// 		}
-		// 	}
-		// },
+		methods: {
+			reset(){
+				this.$parent.bgColor = '#1171cd';
+				this.$parent.bgOpacity = .3;
+				this.$parent.snapToLine = 50;
+				this.$parent.snapToAngle = 15;
+			},
 
-		// watch: {
-		// 	angleValue(val) {
-		// 		this.$emit('update:snapToAngle', +val || 0);
-		// 	},
-		// 	lineValue(val) {
-		// 		this.$emit('update:snapToLine', +val || 0);
-		// 	}
-		// },
+			watchData() {
+				let {bgColor, bgOpacity, snapToAngle, snapToLine} = this.$parent.$data;
+				let dataArr = [bgColor, bgOpacity, snapToAngle, snapToLine];
+				let ret = 0;
+				this.$watch(function (){
+					let {bgColor, bgOpacity, snapToAngle, snapToLine} = this.$parent.$data;
+					let newDataArr = [bgColor, bgOpacity, snapToAngle, snapToLine];
+					let result = dataArr.every(item => newDataArr.every(newItem => newItem === item) );
+					if (!result) {
+						console.log('changed', bgColor, bgOpacity, snapToAngle, snapToLine);
+						ret = Math.random();
+						dataArr = [bgColor, bgOpacity, snapToAngle, snapToLine];
+					}
+					return ret;
+				}, this.saveData)
+			},
+
+			saveData() {
+				let {bgColor, bgOpacity, snapToAngle, snapToLine} = this.$parent.$data;
+				chrome.storage.local.set({bgColor, bgOpacity, snapToAngle, snapToLine});
+			},
+		},
 
 		directives: {
 			validate: {
@@ -188,6 +209,10 @@
 					delete el._validate;
 				}
 			}
+		},
+
+		created() {
+			this.watchData();
 		}
 	}
 </script>
