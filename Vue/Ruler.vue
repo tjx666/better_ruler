@@ -31,6 +31,7 @@
 		.vi_rulerItem{
 			position: absolute;
 			z-index: 99995;
+			user-select: none;
 
 			.vi_txt{
 				white-space: nowrap;
@@ -354,8 +355,6 @@
 			this.bindEvs();
 			this.insertCss();
 			this.getStoredData();
-
-			// this.watchData();
 		},
 		beforeDestroy() {
 			document.body.classList.remove('vi_ruler_cursor');
