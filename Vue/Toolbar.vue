@@ -76,6 +76,9 @@
 				font-size: 12px !important;
 				border-radius: 3px;
 				line-height: 16px;
+				cursor: default;
+				color: buttontext;
+				background-color: buttonface;
 			}
 		}
 		.vi_snap .vi_tbItem{
@@ -169,7 +172,7 @@
 					let newDataArr = [bgColor, bgOpacity, snapToAngle, snapToLine];
 					let result = dataArr.every(item => newDataArr.every(newItem => newItem === item) );
 					if (!result) {
-						console.log('changed', bgColor, bgOpacity, snapToAngle, snapToLine);
+						// console.log('changed', bgColor, bgOpacity, snapToAngle, snapToLine);
 						ret = Math.random();
 						dataArr = [bgColor, bgOpacity, snapToAngle, snapToLine];
 					}
