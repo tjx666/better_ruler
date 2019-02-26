@@ -120,7 +120,7 @@
 
 		<div class="vi_tbItem">
 			<span class="vi_tit">背景透明度：</span>
-			<input v-blur type="range" min=".1" max="1" step=".1" v-model="$parent.bgOpacity" />
+			<input type="range" min=".1" max="1" step=".1" v-model="$parent.bgOpacity" />
 		</div>
 
 		<div class="vi_tbItem vi_snap">
@@ -212,14 +212,14 @@
 					delete el._validate;
 				}
 			},
-			blur: {
-				bind(el) {
-					el.onfocus = el.blur.bind(el);
-				},
-				unbind(el) {
-					delete el.onfocus;
-				}
-			}
+			// blur: {
+			// 	bind(el) {
+			// 		el.onfocus = el.blur.bind(el);
+			// 	},
+			// 	unbind(el) {
+			// 		delete el.onfocus;
+			// 	}
+			// }
 		},
 
 		created() {
