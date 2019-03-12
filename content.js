@@ -2,13 +2,13 @@ import Vue from 'vue';
 import Ruler from './Vue/Ruler';
 import { getAppKey } from "./utils";
 
-let rulerEl = window[getAppKey()];
+let app = window[getAppKey()];
 
-if (rulerEl) {
-	rulerEl.remove();
-	rulerEl.vm.$destroy();
+if (app) {
+	app.remove();
+	app.vm.$destroy();
 
-	delete rulerEl.vm;
+	delete app.vm;
 	delete window[getAppKey()];
 } else {
 	let vm = new Vue({
@@ -16,17 +16,17 @@ if (rulerEl) {
 		render: h => h(Ruler)
 	});
 
-	let rulerEl = document.createElement('div');
-	let ruler = rulerEl.attachShadow({mode: 'open'});
-	rulerEl.vm = vm;
-	ruler.appendChild(vm.$el);
-	document.body.appendChild(rulerEl);
-	window[getAppKey()] = rulerEl;
+	let app = document.createElement('div');
+	let shadow = app.attachShadow({mode: 'open'});
+	app.vm = vm;
+	shadow.appendChild(vm.$el);
+	document.body.appendChild(app);
+	window[getAppKey()] = app;
 
 	let link = document.createElement('link');
 	link.rel = "stylesheet";
 	link.href = chrome.extension.getURL('css.css');
-	ruler.appendChild(link)
+	shadow.appendChild(link)
 
 }
 

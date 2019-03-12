@@ -259,8 +259,6 @@
 						return el.className.indexOf('vi_') !== 0
 					});
 					this._shadow.$on('positionShadow', this.handleShadowCrosshair);
-
-					document.body.classList.add('vi_shadow_added');
 				}
 			},
 
@@ -270,8 +268,6 @@
 					this._shadow.$destroy();
 					this._shadow.$el.remove();
 					delete this._shadow;
-
-					document.body.classList.remove('vi_shadow_added');
 				}
 			},
 
@@ -289,11 +285,11 @@
 			insertBodyCss() {
 				this._style = document.createElement('style');
 				this._style.innerHTML = `
-					.vi_ruler_cursor{
+					body[data-vi_ruler]{
 						cursor: crosshair;
 						user-select: none;
 					}
-					.vi_ruler_cursor::after{
+					body[data-vi_ruler]::after{
 						content: '';
 						position: fixed;
 						left: 0;
@@ -302,8 +298,6 @@
 						bottom: 0;
 						background-color: rgba(0,0,0,.1);
 						z-index: 99990;
-					}
-					.vi_ruler_cursor.vi_shadow_added::after{
 						pointer-events: none;
 					}
 				`;
@@ -350,14 +344,14 @@
 			}
 		},
 		created(){
-			document.body.classList.add('vi_ruler_cursor');
+			document.body.dataset.vi_ruler = 1;
 
 			this.bindEvs();
 			this.insertBodyCss();
 			this.getStoredData();
 		},
 		beforeDestroy() {
-			document.body.classList.remove('vi_ruler_cursor');
+			delete document.body.dataset.vi_ruler;
 
 			this.removeEvs();
 			this.removeBodyCss();
