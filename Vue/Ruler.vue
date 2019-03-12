@@ -1,23 +1,6 @@
 <style lang="less">
 	@bgGray : #333;
 
-	.vi_ruler_cursor{
-		cursor: crosshair;
-		user-select: none;
-		&::after{
-			content: '';
-			position: fixed;
-			left: 0;
-			right: 0;
-			top: 0;
-			bottom: 0;
-			background-color: rgba(0,0,0,.1);
-			z-index: 99990;
-		}
-		&.vi_shadow_added::after{
-			pointer-events: none;
-		}
-	}
 	.vi_ruler{
 		font-size: 12px;
 		line-height: 1;
@@ -272,9 +255,9 @@
 
 			addShadow() {
 				if (!this._shadow) {
-					this._shadow = getShadowVm([function (el){
+					this._shadow = getShadowVm(function (el){
 						return el.className.indexOf('vi_') !== 0
-					}]);
+					});
 					this._shadow.$on('positionShadow', this.handleShadowCrosshair);
 
 					document.body.classList.add('vi_shadow_added');
@@ -303,15 +286,32 @@
 				this.showSize = true;
 			},
 
-			insertCss() {
-				this._link = document.createElement('link');
-				this._link.rel = "stylesheet";
-				this._link.href = chrome.extension.getURL('css.css');
-				(document.head||document.documentElement).appendChild(this._link);
+			insertBodyCss() {
+				this._style = document.createElement('style');
+				this._style.innerHTML = `
+					.vi_ruler_cursor{
+						cursor: crosshair;
+						user-select: none;
+					}
+					.vi_ruler_cursor::after{
+						content: '';
+						position: fixed;
+						left: 0;
+						right: 0;
+						top: 0;
+						bottom: 0;
+						background-color: rgba(0,0,0,.1);
+						z-index: 99990;
+					}
+					.vi_ruler_cursor.vi_shadow_added::after{
+						pointer-events: none;
+					}
+				`;
+				(document.head||document.documentElement).appendChild(this._style);
 			},
 
-			removeCss() {
-				this._link.remove();
+			removeBodyCss() {
+				this._style.remove();
 			},
 
 			getStoredData() {
@@ -353,14 +353,14 @@
 			document.body.classList.add('vi_ruler_cursor');
 
 			this.bindEvs();
-			this.insertCss();
+			this.insertBodyCss();
 			this.getStoredData();
 		},
 		beforeDestroy() {
 			document.body.classList.remove('vi_ruler_cursor');
 
 			this.removeEvs();
-			this.removeCss();
+			this.removeBodyCss();
 		},
 		filters: {
 			toFixed(n) {

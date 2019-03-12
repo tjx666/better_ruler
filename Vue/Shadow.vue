@@ -27,10 +27,11 @@
 
 <script>
 	import { throttle } from "../utils";
+	import { getAppKey } from "../utils";
 
 	export default {
 		name: "Shadow",
-		props: ['filters'],
+		props: ['filter'],
 		data() {
 			return {
 				rect: {
@@ -47,8 +48,7 @@
 					elements = document.elementsFromPoint(clientX, clientY);
 
 				elements.some(el => {
-					if (el !== this.$el
-						&& this.filters.every(filter => filter(el))) {
+					if (el !== this._rootEl && this.filter(el)) {
 						target = el;
 						return true;
 					}
@@ -70,10 +70,12 @@
 			},
 		},
 		created (){
+			this._rootEl = window[getAppKey()];
 			this._positionShadow = throttle(this.positionShadow, 100);
 			document.addEventListener('mousemove', this._positionShadow);
 		},
 		beforeDestroy() {
+			delete this._rootEl;
 			document.removeEventListener('mousemove', this._positionShadow);
 		},
 		filters: {
