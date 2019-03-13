@@ -287,6 +287,8 @@
 				this._style.innerHTML = `
 					body[data-vi_ruler]{
 						cursor: crosshair;
+						-moz-user-select: none;
+						-webkit-user-select: none;
 						user-select: none;
 					}
 					body[data-vi_ruler]::after{
