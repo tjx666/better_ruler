@@ -1,7 +1,7 @@
 {
   "name": "better_ruler",
-  "version": "1.2.1",
-  "description": "A better ruler with more convenience to measure elements in a web page",
+  "version": "1.2.2",
+  "description": "A better ruler with more convenience to measure elements on a web page. 一个网页测量工具，可以自由测量。也可吸附和高亮当前hover的元素自动测量，并显示大小。",
   "main": "content.js",
   "scripts": {
     "start": "webpack --watch",
