@@ -11,6 +11,9 @@
 
 如果快捷键无效，请点击页面空白处再尝试。
 
+### 1.2.3 增加显示和隐藏高亮元素的大小(按住shift键)
+### 1.2.0 使用shadow-dom技术，插件样式不受源页面影响
+
 
 > A web measurement tool that snaps around web elements for easier measurement.
 
@@ -21,3 +24,6 @@
 - Hold down the `shift` key to quickly show and hide the size and close button.
 
 If the shortcut does not work, please click on the blank area on the page and try again.
+
+### 1.2.3 You Can show and hide the size of the highlighted elements now (hold down the `shift` key)
+### 1.2.0 Based on shadow-dom, plugin styles are not affected by web pages

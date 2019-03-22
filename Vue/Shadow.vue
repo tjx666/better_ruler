@@ -21,7 +21,7 @@
 <template>
 	<div class="vi_shadow"
 		 :style="{width: rect.w + 'px', height: rect.h + 'px', left: rect.x + 'px', top: rect.y + 'px'}">
-		<span class="vi_txt">{{ rect.w | toFixed }}px {{ rect.h | toFixed }}px</span>
+		<span class="vi_txt" v-show="showSizes">{{ rect.w | toFixed }}px {{ rect.h | toFixed }}px</span>
 	</div>
 </template>
 
@@ -31,7 +31,7 @@
 
 	export default {
 		name: "Shadow",
-		props: ['filter'],
+		props: ['showSize'],
 		data() {
 			return {
 				rect: {
@@ -40,6 +40,11 @@
 					x: 0,
 					y: 0
 				}
+			}
+		},
+		computed: {
+			showSizes() {
+				return this.showSize
 			}
 		},
 		methods: {
@@ -68,14 +73,21 @@
 
 				this.$emit('positionShadow', {left, top, width, height, pageX, pageY})
 			},
+			filter(el){
+				 return el.className.indexOf('vi_') !== 0
+			}
 		},
 		created (){
 			this._rootEl = window[getAppKey()];
 			this._positionShadow = throttle(this.positionShadow, 100);
 			document.addEventListener('mousemove', this._positionShadow);
+
+			document.body.dataset.vi_ruler_shadow = 1;
 		},
 		beforeDestroy() {
 			delete this._rootEl;
+			delete document.body.dataset.vi_ruler_shadow;
+
 			document.removeEventListener('mousemove', this._positionShadow);
 		},
 		filters: {

@@ -80,6 +80,8 @@
 		<span class="vi_rulerCrossX" :style="{transform: 'translateY(' + (top - offsetLine) + 'px) scale(1, ' + offsetLine + ')', backgroundColor: bgColor}"></span>
 		<span class="vi_rulerCrossY" :style="{transform: 'translateX(' + (left - offsetLine) + 'px) scale(' + offsetLine + ', 1)', backgroundColor: bgColor}"></span>
 
+		<Shadow v-if="showShadow" @positionShadow="handleShadowCrosshair" :showSize="showSize"/>
+
 		<!--<Toolbar :snapToLine.sync="snapToLine" :snapToAngle.sync="snapToAngle" />-->
 		<Toolbar v-if="showToolbar"/>
 	</div>
@@ -87,12 +89,13 @@
 
 <script>
 	import { throttle, hex2rgba, isChrome } from "../utils";
-	import getShadowVm from "./shadow";
+	// import getShadowVm from "./shadow";
+	import Shadow from "./shadow.vue";
 	import Toolbar from "./Toolbar";
 
 	export default {
 		name: "Ruler",
-		components: {Toolbar},
+		components: {Toolbar, Shadow},
 		data() {
 			return {
 				items: [],
@@ -119,9 +122,8 @@
 		},
 
 		watch: {
-			showShadow(val, oldValue) {
-				if (val === oldValue) return;
-				val ? this.addShadow() : this.removeShadow();
+			showShadow(val) {
+				if (!val) this.cursorFollowMouse = true;
 			}
 		},
 
@@ -253,23 +255,24 @@
 				this.moveCursor(x, y);
 			},
 
-			addShadow() {
-				if (!this._shadow) {
-					this._shadow = getShadowVm(function (el){
-						return el.className.indexOf('vi_') !== 0
-					});
-					this._shadow.$on('positionShadow', this.handleShadowCrosshair);
-				}
-			},
+			// addShadow() {
+			// 	if (!this.showShadow) {
+			// 		// this.showShadow = getShadowVm(function (el){
+			// 		// 	return el.className.indexOf('vi_') !== 0
+			// 		// }, this.showSize);
+			// 		// this._shadow.$on('positionShadow', this.handleShadowCrosshair);
+			//
+			// 	}
+			// },
 
-			removeShadow() {
-				if (this._shadow) {
-					this.cursorFollowMouse = true;
-					this._shadow.$destroy();
-					this._shadow.$el.remove();
-					delete this._shadow;
-				}
-			},
+			// removeShadow() {
+			// 	if (this._shadow) {
+			// 		this._shadow.$destroy();
+			// 		this._shadow.$el.remove();
+			// 		delete this._shadow;
+			// 		delete document.body.dataset.vi_ruler_shadow;
+			// 	}
+			// },
 
 			toggle(e) {
 				if (e.target !== e.currentTarget) return;
@@ -300,6 +303,8 @@
 						bottom: 0;
 						background-color: rgba(0,0,0,.1);
 						z-index: 99990;
+					}
+					body[data-vi_ruler][data-vi_ruler_shadow]::after{
 						pointer-events: none;
 					}
 				`;
