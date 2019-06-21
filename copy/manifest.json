@@ -1,9 +1,10 @@
 {
   "name": "Better Ruler",
   "short_name": "Ruler",
-  "version": "1.2.3",
+  "version": "1.2.4",
   "manifest_version": 2,
-  "description": "A better ruler with more convenience to measure elements on a web page. 一个网页测量工具，可以自由测量。也可吸附和高亮当前hover的元素自动测量，并显示大小。",
+  "default_locale": "zh_CN",
+  "description": "__MSG_pluginDesc__",
   "author":"paul",
   "icons": {
     "128": "icon.png"

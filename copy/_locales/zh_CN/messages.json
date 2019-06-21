@@ -1,0 +1,8 @@
+{
+  "pluginDesc": {"message": "一款支持吸附的测量工具"},
+  "color": {"message": "颜色"},
+  "bgOpacity": {"message": "背景透明度"},
+  "snapToBorder": {"message": "边界吸附"},
+  "snapToVertex": {"message": "顶点吸附"},
+  "reset": {"message": "重制"}
+}

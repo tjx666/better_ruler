@@ -114,29 +114,29 @@
 <template>
 	<div class="vi_toolbar" :class="{vi_toolbar_ff: isFF}" @mousemove.stop @touchmove.stop>
 		<div class="vi_tbItem">
-			<span class="vi_tit">颜色：</span>
+			<span class="vi_tit">{{ color }}：</span>
 			<input type="color" class="vi_color" v-model="$parent.bgColor"/>
 		</div>
 
 		<div class="vi_tbItem">
-			<span class="vi_tit">背景透明度：</span>
+			<span class="vi_tit">{{ bgOpacity }}：</span>
 			<input type="range" min=".1" max="1" step=".1" v-model="$parent.bgOpacity" />
 		</div>
 
 		<div class="vi_tbItem vi_snap">
 			<div class="vi_tbItem">
-				<span class="vi_tit">边界吸附：</span>
+				<span class="vi_tit">{{ snapToBorder }}：</span>
 				<input type="number" min="0" max="200" class="vi_text" v-validate v-model="$parent.snapToLine"/>
 			</div>
 
 			<div class="vi_tbItem">
-				<span class="vi_tit">顶点吸附：</span>
+				<span class="vi_tit">{{ snapToVertex }}：</span>
 				<input type="number" min="0" max="100" class="vi_text" v-validate v-model="$parent.snapToAngle"/>
 			</div>
 		</div>
 
 		<div class="vi_tbItem">
-			<button @click="reset" title="重置所有设置项到默认值">重置</button>
+			<button @click="reset" title="重置所有设置项到默认值">{{ resetTxt }}</button>
 		</div>
 
 		<span class="vi_close" @click="$parent.showToolbar = false">X</span>
@@ -151,7 +151,12 @@
 
 		data() {
 			return {
-				isFF
+				isFF,
+				color: chrome.i18n.getMessage("color"),
+				bgOpacity: chrome.i18n.getMessage("bgOpacity"),
+				snapToBorder: chrome.i18n.getMessage("snapToBorder"),
+				snapToVertex: chrome.i18n.getMessage("snapToVertex"),
+				resetTxt: chrome.i18n.getMessage("reset")
 			}
 		},
 

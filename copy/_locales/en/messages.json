@@ -1,0 +1,8 @@
+{
+  "pluginDesc": {"message": "A ruler which supports snapping to the border or the angle of the elements on a web page. "},
+  "color": {"message": "color"},
+  "bgOpacity": {"message": "opacity"},
+  "snapToBorder": {"message": "snapToBorder"},
+  "snapToVertex": {"message": "snapToVertex"},
+  "reset": {"message": "reset"}
+}

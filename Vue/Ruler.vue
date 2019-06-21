@@ -82,7 +82,6 @@
 
 		<Shadow v-if="showShadow" @positionShadow="handleShadowCrosshair" :showSize="showSize"/>
 
-		<!--<Toolbar :snapToLine.sync="snapToLine" :snapToAngle.sync="snapToAngle" />-->
 		<Toolbar v-if="showToolbar"/>
 	</div>
 </template>
