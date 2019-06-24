@@ -4,5 +4,5 @@
   "bgOpacity": {"message": "背景透明度"},
   "snapToBorder": {"message": "边界吸附"},
   "snapToVertex": {"message": "顶点吸附"},
-  "reset": {"message": "重制"}
+  "reset": {"message": "重置"}
 }
