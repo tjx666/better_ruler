@@ -68,7 +68,7 @@
 	<div class="vi_ruler">
 		<div class="vi_rulerItem"
 			 @click.stop
-			 v-for="(item, index) in items"
+			 v-for="(item, index) in items" :key="index"
 			 v-show="item.w > 0 && item.h > 0"
 			 :style="{width: item.w + 'px', height: item.h + 'px', left: item.x + 'px', top: item.y + 'px', backgroundColor: bgc}">
 			<div v-if="showSize">

@@ -49,7 +49,8 @@
 		},
 		methods: {
 			positionShadow(e) {
-				let {target, clientX, clientY, pageX, pageY} = e,
+				let {clientX, clientY, pageX, pageY} = e,
+					target,
 					elements = document.elementsFromPoint(clientX, clientY);
 
 				elements.some(el => {
