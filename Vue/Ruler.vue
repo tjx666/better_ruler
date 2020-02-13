@@ -23,7 +23,7 @@
 				top: 50%;
 				transform: translate(-50%, -50%);
 				font-size: 12px;
-				background-color: rgba(237,237,237,1);
+				background-color: rgba(237,237,237,.85);
 				border-radius: 3px;
 				padding: 2px 3px;
 				line-height: 1;
@@ -39,6 +39,15 @@
 				padding: 2px;
 				color: rgba(237,237,237,1);
 			}
+
+			&.vi_cur > div{
+				position: absolute;
+				left: 0; top: 0;
+
+				.vi_txt{
+					transform: translate(0, -115%);
+				}
+			}
 		}
 
 		.vi_rulerCrossX{
@@ -47,7 +56,6 @@
 			left: 0;
 			right: 0;
 			height: 1px;
-			/*background-color: red;*/
 			pointer-events: none;
 			z-index: 99996;
 		}
@@ -57,7 +65,6 @@
 			top: 0;
 			bottom: 0;
 			width: 1px;
-			/*background-color: red;*/
 			pointer-events: none;
 			z-index: 99996;
 		}
@@ -67,13 +74,14 @@
 <template>
 	<div class="vi_ruler">
 		<div class="vi_rulerItem"
-			 @click.stop
-			 v-for="(item, index) in items" :key="index"
-			 v-show="item.w > 0 && item.h > 0"
-			 :style="{width: item.w + 'px', height: item.h + 'px', left: item.x + 'px', top: item.y + 'px', backgroundColor: bgc}">
+			:class="{vi_cur: items.length - 1 === index && startDraw}"
+			@click.stop
+			v-for="(item, index) in items" :key="index"
+			v-show="item.w > 0 && item.h > 0"
+			:style="{width: item.w + 'px', height: item.h + 'px', left: item.x + 'px', top: item.y + 'px', backgroundColor: bgc}">
 			<div v-if="showSize">
-				<span class="vi_close" :style="{backgroundColor: bgColor}" @touchstart.stop="remove(index)" @mousedown.stop="remove(index)">X</span>
-				<span class="vi_txt">{{ item.w | toFixed }}px {{ item.h | toFixed }}px</span>
+				<span class="vi_close" :style="{backgroundColor: bgColor}" @touchstart.stop="remove(index)" @mousedown.stop="remove(index)" v-show="!startDraw">X</span>
+				<span class="vi_txt">{{ item.w | toFixed }} x {{ item.h | toFixed }}</span>
 			</div>
 		</div>
 
@@ -364,7 +372,7 @@
 		},
 		filters: {
 			toFixed(n) {
-				return +n.toFixed(2);
+				return +n.toFixed(1);
 			}
 		}
 	}

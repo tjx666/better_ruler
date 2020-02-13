@@ -1,7 +1,6 @@
 <style scoped lang="less">
 	.vi_shadow{
 		position:absolute;
-		/*background-color: rgba(0,0,0,.2);*/
 		background-color: rgba(255, 170, 50, .5);
 		z-index: 99991;
 
@@ -93,7 +92,7 @@
 		},
 		filters: {
 			toFixed(n) {
-				return +n.toFixed(2);
+				return +n.toFixed(1);
 			}
 		}
 	}
