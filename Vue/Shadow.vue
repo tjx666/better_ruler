@@ -20,7 +20,7 @@
 <template>
 	<div class="vi_shadow"
 		 :style="{width: rect.w + 'px', height: rect.h + 'px', left: rect.x + 'px', top: rect.y + 'px'}">
-		<span class="vi_txt" v-show="showSizes">{{ rect.w | toFixed }}px {{ rect.h | toFixed }}px</span>
+		<span class="vi_txt" v-show="showSizes">{{ rect.w | toFixed }} x {{ rect.h | toFixed }}</span>
 	</div>
 </template>
 

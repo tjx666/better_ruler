@@ -1,6 +1,6 @@
 {
   "name": "better_ruler",
-  "version": "1.2.5",
+  "version": "1.2.6",
   "description": "A ruler which supports snapping to the border or the angle of the elements on a web page. ",
   "main": "content.js",
   "scripts": {
