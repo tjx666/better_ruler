@@ -16,7 +16,7 @@
 			z-index: 99995;
 			user-select: none;
 
-			.vi_txt{
+			.vi_size{
 				white-space: nowrap;
 				position: absolute;
 				left: 50%;
@@ -40,13 +40,8 @@
 				color: rgba(237,237,237,1);
 			}
 
-			&.vi_cur > div{
-				position: absolute;
-				left: 0; top: 0;
-
-				.vi_txt{
-					transform: translate(0, -115%);
-				}
+			&.vi_cur .vi_close{
+				display: none;
 			}
 		}
 
@@ -80,8 +75,8 @@
 			v-show="item.w > 0 && item.h > 0"
 			:style="{width: item.w + 'px', height: item.h + 'px', left: item.x + 'px', top: item.y + 'px', backgroundColor: bgc}">
 			<div v-if="showSize">
-				<span class="vi_close" :style="{backgroundColor: bgColor}" @touchstart.stop="remove(index)" @mousedown.stop="remove(index)" v-show="!startDraw">X</span>
-				<span class="vi_txt">{{ item.w | toFixed }} x {{ item.h | toFixed }}</span>
+				<span class="vi_close" :style="{backgroundColor: bgColor}" @touchstart.stop="remove(index)" @mousedown.stop="remove(index)">X</span>
+				<span class="vi_size">{{ item.w | toFixed }} x {{ item.h | toFixed }}</span>
 			</div>
 		</div>
 

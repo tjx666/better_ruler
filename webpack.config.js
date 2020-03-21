@@ -33,8 +33,8 @@ let config = {
     },
 
     plugins: [
-        new webpack.HashedModuleIdsPlugin(),
-        new VueLoaderPlugin(),
+      new webpack.HashedModuleIdsPlugin(),
+      new VueLoaderPlugin(),
 	    new MiniCssExtractPlugin({
 		    filename:'css.css'
 	    }),
@@ -46,7 +46,7 @@ let config = {
             test: /\.js$/,
             exclude: /node_modules/,
             use: [{
-                loader: 'babel-loader',
+                loader: 'babel-loader'
             }],
         }, {
             test: /\.vue$/,
@@ -57,7 +57,6 @@ let config = {
         },{
             test: /\.(less|css)$/,
             use: [
-                // 'vue-style-loader',
                 MiniCssExtractPlugin.loader,
                 'css-loader',
                 'postcss-loader',

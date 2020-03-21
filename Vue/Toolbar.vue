@@ -99,9 +99,9 @@
 			border: 1px solid @bgGray;
 			background-color: @bgGray;
 		}
-		::-webkit-color-swatch {
+		// ::-webkit-color-swatch {
 			/*position: relative;*/
-		}
+		// }
 
 		&.vi_toolbar_ff{
 			.vi_color {
